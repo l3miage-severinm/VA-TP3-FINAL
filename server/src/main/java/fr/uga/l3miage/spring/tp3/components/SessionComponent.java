@@ -14,8 +14,13 @@ public class SessionComponent {
     private final EcosSessionProgrammationRepository ecosSessionProgrammationRepository;
     private final EcosSessionProgrammationStepRepository ecosSessionProgrammationStepRepository;
 
+    public EcosSessionEntity createSession(EcosSessionEntity entity) {
+        ecosSessionProgrammationStepRepository.saveAll(entity.getEcosSessionProgrammationEntity().getEcosSessionProgrammationStepEntities());
+        ecosSessionProgrammationRepository.save(entity.getEcosSessionProgrammationEntity());
+        return ecosSessionRepository.save(entity);
+    }
 
-    public EcosSessionEntity createSession(EcosSessionEntity entity){
+    public EcosSessionEntity updateSession(EcosSessionEntity entity) {
         ecosSessionProgrammationStepRepository.saveAll(entity.getEcosSessionProgrammationEntity().getEcosSessionProgrammationStepEntities());
         ecosSessionProgrammationRepository.save(entity.getEcosSessionProgrammationEntity());
         return ecosSessionRepository.save(entity);

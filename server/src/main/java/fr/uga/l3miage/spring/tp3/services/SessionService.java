@@ -48,4 +48,6 @@ public class SessionService {
             throw new CreationSessionRestException(e.getMessage());
         }
     }
+    
+
 }

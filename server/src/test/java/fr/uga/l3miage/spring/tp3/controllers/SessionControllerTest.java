@@ -44,6 +44,7 @@ public class SessionControllerTest {
         // When
         ResponseEntity<SessionResponse> responseEntity = testRestTemplate.postForEntity("/api/sessions/create", request, SessionResponse.class);
 
+        
         // Then
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(201);
         assertThat(responseEntity.getBody()).isNotNull();

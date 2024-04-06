@@ -65,7 +65,4 @@ public class CandidateServiceTest {
         // When - Then
         assertThrows(CandidateNotFoundRestException.class, () -> candidateService.getCandidateAverage(1L));
     }
-
-
-
 }

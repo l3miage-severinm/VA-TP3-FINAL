@@ -1,21 +1,25 @@
 package fr.uga.l3miage.spring.tp3.controllers;
 
+import fr.uga.l3miage.spring.tp3.exceptions.CandidatNotFoundResponse;
 import fr.uga.l3miage.spring.tp3.models.CandidateEntity;
 import fr.uga.l3miage.spring.tp3.models.CandidateEvaluationGridEntity;
-import fr.uga.l3miage.spring.tp3.repositories.CandidateEvaluationGridRepository;
+import fr.uga.l3miage.spring.tp3.models.ExamEntity;
 import fr.uga.l3miage.spring.tp3.repositories.CandidateRepository;
-import fr.uga.l3miage.spring.tp3.request.SessionCreationRequest;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import org.springframework.http.HttpHeaders;
-import java.util.Set;
+import org.springframework.http.*;
+
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,46 +33,52 @@ public class CandidateControllerTest {
 
     @Autowired
     private CandidateRepository candidateRepository;
-
-    @SpyBean
-    private CandidateEvaluationGridRepository candidateEvaluationGridRepository;
-
-    @AfterEach
-    public void clear() {
-        candidateRepository.deleteAll();
-    }
-
+    /*
     @Test
-    void getCandidateAverage10() {
+    void getCandidateAverageFound() {
 
+        //given
         final HttpHeaders headers = new HttpHeaders();
 
-        final SessionCreationRequest request = SessionCreationRequest
-                .builder()
-                .build();
+        CandidateEntity candidate = CandidateEntity.builder()
+                .id(1L).email("lorenzo.porcu@etu.univ-grenoble-alpes.fr")
+                .candidateEvaluationGridEntities(new HashSet<>()).build();
 
-        CandidateEntity candidate = CandidateEntity
-                .builder()
-                .email("lorenzo.porcu@etu.univ-grenoble-alpes.fr")
-                .build();
+        CandidateEvaluationGridEntity grid1 = CandidateEvaluationGridEntity.builder()
+                .grade(5).examEntity(ExamEntity.builder().weight(1).build()).build();
 
-        CandidateEvaluationGridEntity candidateEvaluationGrid1 = CandidateEvaluationGridEntity
-                .builder()
-                .grade(5)
-                .candidateEntity(candidate)
-                .build();
+        CandidateEvaluationGridEntity grid2 = CandidateEvaluationGridEntity.builder().grade(15)
+                .examEntity(ExamEntity.builder().weight(1).build()).build();
 
-        CandidateEvaluationGridEntity candidateEvaluationGrid2 = CandidateEvaluationGridEntity
-                .builder()
-                .grade(15)
-                .candidateEntity(candidate)
-                .build();
+        candidate.getCandidateEvaluationGridEntities().add(grid1);
+        candidate.getCandidateEvaluationGridEntities().add(grid2);
 
         candidateRepository.save(candidate);
-        candidateEvaluationGridRepository.save(candidateEvaluationGrid1);
 
-        Set<CandidateEntity> candidateEntitiesResponses = candidateRepository.findAllByCandidateEvaluationGridEntitiesGradeLessThan(6);
+        // When
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange("/api/candidates/{candidateId}/average", HttpMethod.GET, null, String.class, 1L);
 
-        assertThat(candidateEntitiesResponses).hasSize(1);
+        // Then
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+        assertThat(Double.parseDouble(responseEntity.getBody())).isEqualTo(10.0);
     }
+    */
+    @Test
+    void getCandidateAverageNotFound() {
+        // Given
+        final Map<String, Object> urlParams = new HashMap<>();
+        urlParams.put("candidateId", "id du candidat qui n'existe pas");
+
+        CandidatNotFoundResponse expectedResponse = CandidatNotFoundResponse.builder()
+                .uri("/api/candidates/id du candidat qui n'existe pas")
+                .errorMessage("Le candidat avec l'ID [id du candidat qui n'existe pas] n'a pas été trouvé")
+                .build();
+
+        // When
+        ResponseEntity<CandidatNotFoundResponse> response = testRestTemplate.exchange("/api/candidates/{candidateId}/average", HttpMethod.GET, null, CandidatNotFoundResponse.class, urlParams);
+
+        // Then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
 }

@@ -49,7 +49,7 @@ public class SessionServiceTest {
                 .build();
 
         when(sessionComponent.createSession(any())).thenReturn(ecosSessionEntity);
-        
+
         // When
         SessionResponse response = sessionService.createSession(request);
 

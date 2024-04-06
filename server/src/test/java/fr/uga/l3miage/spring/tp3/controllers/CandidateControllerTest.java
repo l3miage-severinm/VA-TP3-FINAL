@@ -82,5 +82,4 @@ public class CandidateControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).usingRecursiveComparison().isEqualTo(expectedResponse);
     }
-
 }

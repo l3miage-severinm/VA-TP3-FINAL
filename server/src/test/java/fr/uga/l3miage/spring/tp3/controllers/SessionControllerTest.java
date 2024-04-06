@@ -2,7 +2,6 @@ package fr.uga.l3miage.spring.tp3.controllers;
 
 import fr.uga.l3miage.spring.tp3.models.EcosSessionEntity;
 import fr.uga.l3miage.spring.tp3.models.EcosSessionProgrammationEntity;
-import fr.uga.l3miage.spring.tp3.repositories.EcosSessionRepository;
 import fr.uga.l3miage.spring.tp3.request.SessionCreationRequest;
 import fr.uga.l3miage.spring.tp3.request.SessionProgrammationCreationRequest;
 import fr.uga.l3miage.spring.tp3.responses.SessionResponse;

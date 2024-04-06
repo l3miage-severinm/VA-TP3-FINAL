@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -47,6 +49,22 @@ public class CandidateComponentTest {
 
         // When - Then
         assertDoesNotThrow(() -> candidateComponent.getCandidatById(1L));
+    }
+
+    @Test
+    void addCandidateThrowsException() throws IllegalArgumentException{
+        // Given
+        CandidateEntity candidateEntity = CandidateEntity.builder()
+                .email("test.com")
+                .birthDate(LocalDate.now())
+                .build();
+        /*
+        HashSet candidates = new HashSet();
+        candidates.add(candidateEntity);
+        when(candidateRepository.findAll()).thenReturn(candidates);
+        assert( candidateComponent.addCandidates(candidates) == null);
+        */
+        
     }
 }
 

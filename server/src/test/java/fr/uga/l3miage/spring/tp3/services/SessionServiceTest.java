@@ -56,4 +56,42 @@ public class SessionServiceTest {
         // Then
         assertNotNull(response);
     }
+
+    @Test
+    void createSessionFailure() {
+        // Given
+        SessionCreationRequest request = SessionCreationRequest.builder()
+                .name("test")
+                .startDate(LocalDateTime.MIN)
+                .endDate(LocalDateTime.MAX)
+                .examsId(new HashSet<>())
+                .ecosSessionProgrammation(SessionProgrammationCreationRequest.builder().steps(new HashSet<>()).build())
+                .build();
+
+        when(sessionComponent.createSession(any())).thenReturn(null);
+
+        // When
+        SessionResponse response = sessionService.createSession(request);
+
+        // Then
+        //assertNotNull(response);
+    }
+
+    @Test
+    void endSessionSuccess() {
+        // Given
+        EcosSessionEntity ecosSessionEntity = EcosSessionEntity.builder()
+                .name("test")
+                .startDate(LocalDateTime.MIN)
+                .endDate(LocalDateTime.MAX)
+                .build();
+
+        when(sessionComponent.endSession(any())).thenReturn(ecosSessionEntity);
+
+        // When
+        SessionResponse response = sessionService.endSession(1L);
+
+        // Then
+        assertNotNull(response);
+    }
 }

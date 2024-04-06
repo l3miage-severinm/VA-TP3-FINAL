@@ -53,4 +53,21 @@ public class SessionComponentTest {
 
         assertNotNull(createdSession);
     }
+
+    @Test
+    void endSessionSuccess() {
+        EcosSessionEntity sessionEntity = EcosSessionEntity.builder()
+                .id(1L).examEntities(new HashSet<>())
+                .name("test")
+                .ecosSessionProgrammationEntity(EcosSessionProgrammationEntity.builder().build())
+                .build();
+
+        when(ecosSessionRepository.findById(1L))
+                .thenReturn(java.util.Optional.of(sessionEntity));
+
+        when(ecosSessionRepository.save(any()))
+                .thenReturn(sessionEntity);
+
+        assertDoesNotThrow(() -> sessionComponent.endSession(1L));
+    }
 }

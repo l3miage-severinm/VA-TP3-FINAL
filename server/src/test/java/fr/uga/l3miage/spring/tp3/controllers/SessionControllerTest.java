@@ -65,5 +65,22 @@ public class SessionControllerTest {
         //assertThat(responseEntity.getBody()).isNull();
     }
 
+    @Test
+    void endSessionSuccess() {
 
+        // Given
+        EcosSessionEntity ecosSessionEntity = EcosSessionEntity.builder()
+                .name("test")
+                .startDate(LocalDateTime.MIN)
+                .endDate(LocalDateTime.MAX)
+                .ecosSessionProgrammationEntity(EcosSessionProgrammationEntity.builder().build())
+                .build();
+
+        // When
+        ResponseEntity<SessionResponse> responseEntity = testRestTemplate.exchange("/api/sessions/end/{id}", HttpMethod.PUT, null, SessionResponse.class, ecosSessionEntity.getId());
+
+        // Then
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+        assertThat(responseEntity.getBody()).isNotNull();
+    }
 }

@@ -14,5 +14,4 @@ public class SessionCreationRequest {
     private LocalDateTime endDate;
     private Set<Long> examsId;
     private SessionProgrammationCreationRequest ecosSessionProgrammation;
-
 }

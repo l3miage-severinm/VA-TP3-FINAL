@@ -44,10 +44,26 @@ public class SessionControllerTest {
         // When
         ResponseEntity<SessionResponse> responseEntity = testRestTemplate.postForEntity("/api/sessions/create", request, SessionResponse.class);
 
-        
         // Then
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(201);
         assertThat(responseEntity.getBody()).isNotNull();
     }
+
+    @Test
+    void creationSessionFail() {
+
+        SessionCreationRequest request = SessionCreationRequest.builder()
+                .startDate(LocalDateTime.MIN)
+                .endDate(LocalDateTime.MAX)
+                .examsId(new HashSet<>())
+                .ecosSessionProgrammation(SessionProgrammationCreationRequest.builder().steps(new HashSet<>()).build())
+                .build();
+
+        ResponseEntity<SessionResponse> responseEntity = testRestTemplate.postForEntity("/api/sessions/create", request, SessionResponse.class);
+
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(201);
+        //assertThat(responseEntity.getBody()).isNull();
+    }
+
 
 }

@@ -1,10 +1,12 @@
 package fr.uga.l3miage.spring.tp3.services;
 
 import fr.uga.l3miage.spring.tp3.components.CandidateComponent;
+import fr.uga.l3miage.spring.tp3.exceptions.rest.CandidateNotFoundRestException;
 import fr.uga.l3miage.spring.tp3.exceptions.technical.CandidateNotFoundException;
 import fr.uga.l3miage.spring.tp3.models.CandidateEntity;
 import fr.uga.l3miage.spring.tp3.models.CandidateEvaluationGridEntity;
 
+import fr.uga.l3miage.spring.tp3.models.ExamEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,7 +32,7 @@ public class CandidateServiceTest {
     CandidateComponent candidateComponent;
 
     @Test
-    void testGetCandidateAverage() throws CandidateNotFoundException {
+    void GetCandidateAverageFound() throws CandidateNotFoundException {
 
         // Given
         CandidateEntity candidateEntity = CandidateEntity.builder()
@@ -39,15 +41,14 @@ public class CandidateServiceTest {
                 .candidateEvaluationGridEntities(new HashSet<>())
                 .build();
         CandidateEvaluationGridEntity grid1 = CandidateEvaluationGridEntity.builder()
-                .grade(5).build();
+                .grade(5).examEntity(ExamEntity.builder().weight(1).build()).build();
         CandidateEvaluationGridEntity grid2 = CandidateEvaluationGridEntity.builder()
-                .grade(7).build();
+                .grade(7).examEntity(ExamEntity.builder().weight(1).build()).build();
 
         candidateEntity.getCandidateEvaluationGridEntities().add(grid1);
         candidateEntity.getCandidateEvaluationGridEntities().add(grid2);
-        
-        when(candidateComponent.getCandidatById(1L)).thenReturn(candidateEntity);
 
+        when(candidateComponent.getCandidatById(1L)).thenReturn(candidateEntity);
 
         // When
         double average = candidateService.getCandidateAverage(1L);
@@ -55,16 +56,16 @@ public class CandidateServiceTest {
         // Then
         assertEquals(6.0, average);
     }
-    /*
+
     @Test
-    void testGetCandidateAverageNotFound() {
+    void GetCandidateAverageNotFound() throws CandidateNotFoundException {
         // Given
         when(candidateComponent.getCandidatById(1L)).thenThrow(new CandidateNotFoundException("Candidate not found", 1L));
 
         // When - Then
-        CandidateService candidateService = new CandidateService(candidateComponent);
-        assertThrows(CandidateNotFoundException.class, () -> candidateService.getCandidateAverage(1L));
+        assertThrows(CandidateNotFoundRestException.class, () -> candidateService.getCandidateAverage(1L));
     }
-    */
+
+
 
 }

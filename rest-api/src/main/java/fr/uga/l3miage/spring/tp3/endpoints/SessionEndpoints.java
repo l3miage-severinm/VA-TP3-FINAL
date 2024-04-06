@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Gestion des session")
@@ -23,6 +24,10 @@ public interface SessionEndpoints {
     @PostMapping("/create")
     SessionResponse createSession(@RequestBody SessionCreationRequest request);
 
-
+    @PostMapping("/endEvaluation")
+    @Operation(description = "Faire passer l'état d'une session de l'état EVAL_STARTED à EVAL_ENDED")
+    @ApiResponse(responseCode = "200", description = "La session a été terminée avec succès")
+    @ApiResponse(responseCode = "409", description = "Conflit : impossible de terminer la session")
+    SessionResponse endEvaluation(@RequestParam Long sessionId);
 
 }

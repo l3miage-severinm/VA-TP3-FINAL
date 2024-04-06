@@ -48,6 +48,10 @@ public class SessionService {
             throw new CreationSessionRestException(e.getMessage());
         }
     }
+
+    public SessionResponse endSession(Long sessionId){
+        return sessionMapper.toResponse(sessionComponent.endSession(sessionId));
+    }
     
 
 }
